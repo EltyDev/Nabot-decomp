@@ -1,0 +1,51 @@
+buildscript {
+    repositories {
+        maven {
+            name = "forge"
+            url = "https://files.minecraftforge.net/maven"
+        }
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+    }
+    dependencies {
+        classpath 'com.github.EltyDev:ForgeGradle:1.0-fixed'
+    }
+}
+
+apply plugin: 'forge'
+
+version = "1.0"
+group= "com.yourname.modid"
+archivesBaseName = "modid"
+
+minecraft {
+    version = "1.6.4-9.11.1.964"
+}
+
+processResources
+        {
+            from(sourceSets.main.resources.srcDirs) {
+                include 'mcmod/info'
+                expand 'version':project.version, 'mcversion':project.minecraft.version
+            }
+            from(sourceSets.main.resources.srcDirs) {
+                exclude 'mcmod.info'
+            }
+        }
+
+configurations.all {
+    exclude group: 'net.sourceforge.argo', module: 'argo'
+}
+
+def jdk6RtJar = file("${JDK_6}/jre/lib/rt.jar")
+
+tasks.withType(JavaCompile) {
+    sourceCompatibility = '1.6'
+    targetCompatibility = '1.6'
+
+    if (jdk6RtJar.exists()) {
+        options.bootClasspath = jdk6RtJar.absolutePath
+    } else {
+        logger.warn("rt.jar not found at ${jdk6RtJar}. Compiling without bootClasspath — beware of possible Java 7 incompatibilities.")
+    }
+}
