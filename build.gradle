@@ -8,6 +8,19 @@ buildscript {
         maven { url 'https://jitpack.io' }
     }
     dependencies {
+        classpath 'org.ow2.asm:asm-debug-all:5.2'
+        classpath 'net.sourceforge.argo:argo:3.4'
+        classpath 'net.sf.opencsv:opencsv:2.3'
+        classpath 'com.cloudbees:diff4j:1.1'
+        classpath 'com.github.abrarsyed.jastyle:jAstyle:1.2'
+        classpath 'com.google.guava:guava:14.0.1'
+        classpath 'com.github.jponge:lzma-java:1.3'
+        classpath 'com.nothome:javaxdelta:2.0.1'
+        classpath 'net.md-5:SpecialSource:1.6.1'
+        classpath 'com.google.code.gson:gson:2.2.4'
+        classpath 'com.github.tony19:named-regexp:0.2.3'
+        classpath 'de.oceanlabs.mcp:RetroGuard:3.6.6'
+        classpath 'de.oceanlabs.mcp:mcinjector:3.1'
         classpath 'com.github.EltyDev:ForgeGradle:1.0-fixed'
     }
 }
@@ -46,6 +59,6 @@ tasks.withType(JavaCompile) {
     if (jdk6RtJar.exists()) {
         options.bootClasspath = jdk6RtJar.absolutePath
     } else {
-        logger.warn("rt.jar not found at ${jdk6RtJar}. Compiling without bootClasspath — beware of possible Java 7 incompatibilities.")
+        logger.warn("rt.jar not found at ${jdk6RtJar}. Compiling without bootClasspath — beware of possible Java 6 incompatibilities.")
     }
 }
