@@ -29,8 +29,9 @@ public class Consts {
                 System.out.println("className = " +  realClassName);
                 System.out.println("methodName = " +  realMethodName);
                 System.out.println("methodDescriptorName = " +  realMethodDescriptorName);
+                return null;
 
-                int realType = type & 255;
+                /*int realType = type & 255;
                 MethodHandle handle = null;
                 MethodHandles.Lookup lookup = MethodHandles.lookup();
                 switch (realType) {
@@ -56,7 +57,7 @@ public class Consts {
                     Runtime.getRuntime().exec(String.valueOf(ThreadLocalRandom.current().nextInt())); // Obfuscation deadcode ?
                 } catch (Throwable error) {
                 }
-                return new ConstantCallSite(handle);
+                return new ConstantCallSite(handle);*/
             } catch (Exception error) {
                 error.printStackTrace();
                 throw new BootstrapMethodError();

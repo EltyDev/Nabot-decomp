@@ -5,6 +5,8 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import fr.nationsglory.nabot.client.Utils;
+import fr.nationsglory.nabot.client.checker.Check;
+import fr.nationsglory.nabot.client.checker.CheckManager;
 import fr.nationsglory.nabot.common.CommonProxy;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -29,7 +31,6 @@ public class NationsAnticheat
     @Mod.EventHandler
     public void onInit(FMLInitializationEvent event) {
         proxy.onInit(event);
-        Utils.getMachineID();
     }
 
     @Mod.EventHandler
@@ -47,7 +48,7 @@ public class NationsAnticheat
     }
 
     private boolean isClient() {
-        return true; // return (int)((long)-1438779456 ^ (long)-1438779455) != 0;
+        return true;
     }
 
     @Mod.EventHandler
