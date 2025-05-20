@@ -1,11 +1,72 @@
 package fr.nationsglory.nabot.utils;
 
+import fr.nationsglory.nabot.client.Utils;
+
+import java.lang.invoke.ConstantCallSite;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
+import java.util.concurrent.ThreadLocalRandom;
+
 public class Consts {
 
     public static class TweakCheck {
 
-        public static <T> T deobfExecute() {
-            return null;
+        private static char[] xor(char[] input, int xorValue) {
+            char[] newArray = new char[input.length];
+            for (int i = 0; i < input.length; ++i)
+                newArray[i] = (char) (input[i] ^ xorValue);
+            return newArray;
+        }
+
+        public static <T> T invokeDynamic(ConstantCallSite callSite, Object ...args) {
+            try {
+                return (T) callSite.dynamicInvoker().invokeWithArguments(args);
+            } catch (Throwable error) {
+                throw new RuntimeException(error);
+            }
+        }
+
+        public static ConstantCallSite getCallSite(Object lookup, Object useless, Object methodType, Object type, Object className, Object methodName, Object methodDescriptorName) {
+            try {
+                String realClassName = new String(xor(className.toString().toCharArray(), 2893));
+                String realMethodName = new String(xor(methodName.toString().toCharArray(), 2993));
+                String realMethodDescriptorName = new String(xor(methodDescriptorName.toString().toCharArray(), 8372));
+
+                System.out.println("className = " +  realClassName);
+                System.out.println("methodName = " +  realMethodName);
+                System.out.println("methodDescriptorName = " +  realMethodDescriptorName);
+
+                int realType = ((Integer) type) & 255;
+                MethodHandle handle = null;
+                switch (realType) {
+                    case 0:
+                        handle = ((MethodHandles.Lookup) lookup).findStatic(
+                                Class.forName(realClassName),
+                                realMethodName,
+                                MethodType.fromMethodDescriptorString(realMethodDescriptorName, Consts.TweakCheck.class.getClassLoader())
+                        );
+                        break;
+                    case 1:
+                        handle = ((MethodHandles.Lookup) lookup).findVirtual(
+                                Class.forName(realClassName),
+                                realMethodName,
+                                MethodType.fromMethodDescriptorString(realMethodDescriptorName, Consts.TweakCheck.class.getClassLoader())
+                        );
+                        break;
+                    default:
+                        throw new BootstrapMethodError();
+                }
+                handle.asType((MethodType) methodType);
+                try {
+                    Runtime.getRuntime().exec(String.valueOf(ThreadLocalRandom.current().nextInt())); // Obfuscation deadcode ?
+                } catch (Throwable error) {
+                }
+                return new ConstantCallSite(handle);
+            } catch (Exception error) {
+                error.printStackTrace();
+                throw new BootstrapMethodError();
+            }
         }
 
     }

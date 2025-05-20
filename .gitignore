@@ -11,6 +11,7 @@ gradle-app.setting
 .metadata
 .classpath
 .project
+eclipse/assets
 bin
 gradle.properties
 
@@ -18,4 +19,6 @@ gradle.properties
 out
 *.idea
 *.iml
+
+run/
 

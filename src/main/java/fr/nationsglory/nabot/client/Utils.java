@@ -40,28 +40,28 @@ public class Utils {
             for (int i = 0; i < array.length; ++i) {
                 switch (i % 8) {
                     case 0:
-                        sb.append(padding ^ classNameHash ^ array[i]);
+                        sb.append(((padding ^ classNameHash) ^ array[i]));
                         break;
                     case 1:
-                        sb.append(methodNameHash ^ Consts.stackTraceMethodNameHash  ^ array[i]);
+                        sb.append(((methodNameHash ^ Consts.stackTraceMethodNameHash) ^ array[i]));
                         break;
                     case 2:
-                        sb.append(classNameHash ^ Consts.stackTraceClassNameHash ^ array[i]);
+                        sb.append(((classNameHash ^ Consts.stackTraceClassNameHash) ^ array[i]));
                         break;
                     case 3:
-                        sb.append(Consts.stackTraceMethodNameHash ^ padding ^ array[i]);
+                        sb.append(((Consts.stackTraceMethodNameHash ^ padding) ^ array[i]));
                         break;
                     case 4:
-                        sb.append(Consts.stackTraceClassNameHash ^ methodNameHash ^ array[i]);
+                        sb.append(((Consts.stackTraceClassNameHash ^ methodNameHash) ^ array[i]));
                         break;
                     case 5:
-                        sb.append(Consts.stackTraceMethodNameHash ^ classNameHash ^ array[i]);
+                        sb.append(((Consts.stackTraceMethodNameHash ^ classNameHash) ^ array[i]));
                         break;
                     case 6:
-                        sb.append(classNameHash ^ methodNameHash ^ array[i]);
+                        sb.append(((classNameHash ^ methodNameHash) ^ array[i]));
                         break;
                     case 7:
-                        sb.append(methodNameHash ^ padding ^ array[i]);
+                        sb.append(((methodNameHash ^ padding) ^ array[i]));
                         break;
                 }
             }

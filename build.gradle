@@ -50,15 +50,17 @@ configurations.all {
     exclude group: 'net.sourceforge.argo', module: 'argo'
 }
 
-def jdk6RtJar = file("${JDK_6}/jre/lib/rt.jar")
+def jdk7RtJar = file("${JDK_7}/jre/lib/rt.jar")
 
 tasks.withType(JavaCompile) {
-    sourceCompatibility = '1.6'
-    targetCompatibility = '1.6'
+    sourceCompatibility = '1.7'
+    targetCompatibility = '1.7'
 
-    if (jdk6RtJar.exists()) {
-        options.bootClasspath = jdk6RtJar.absolutePath
+    options.encoding = "utf-8"
+
+    if (jdk7RtJar.exists()) {
+        options.bootClasspath = jdk7RtJar.absolutePath
     } else {
-        logger.warn("rt.jar not found at ${jdk6RtJar}. Compiling without bootClasspath — beware of possible Java 6 incompatibilities.")
+        logger.warn("rt.jar not found at ${jdk7RtJar}. Compiling without bootClasspath — beware of possible Java 7 incompatibilities.")
     }
 }
