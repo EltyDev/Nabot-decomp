@@ -1,6 +1,7 @@
 package fr.nationsglory.nabot.utils;
 
 import fr.nationsglory.nabot.client.Utils;
+import net.minecraft.util.EnumChatFormatting;
 
 import java.lang.invoke.ConstantCallSite;
 import java.lang.invoke.MethodHandle;
@@ -19,15 +20,7 @@ public class Consts {
             return newArray;
         }
 
-        public static <T> T invokeDynamic(ConstantCallSite callSite, Object ...args) {
-            try {
-                return (T) callSite.dynamicInvoker().invokeWithArguments(args);
-            } catch (Throwable error) {
-                throw new RuntimeException(error);
-            }
-        }
-
-        public static ConstantCallSite getCallSite(Object lookup, Object useless, Object methodType, Object type, Object className, Object methodName, Object methodDescriptorName) {
+        public static ConstantCallSite getCallSite(MethodType methodType, int type, String className, Object methodName, Object methodDescriptorName) {
             try {
                 String realClassName = new String(xor(className.toString().toCharArray(), 2893));
                 String realMethodName = new String(xor(methodName.toString().toCharArray(), 2993));
@@ -37,18 +30,19 @@ public class Consts {
                 System.out.println("methodName = " +  realMethodName);
                 System.out.println("methodDescriptorName = " +  realMethodDescriptorName);
 
-                int realType = ((Integer) type) & 255;
+                int realType = type & 255;
                 MethodHandle handle = null;
+                MethodHandles.Lookup lookup = MethodHandles.lookup();
                 switch (realType) {
                     case 0:
-                        handle = ((MethodHandles.Lookup) lookup).findStatic(
+                        handle = lookup.findStatic(
                                 Class.forName(realClassName),
                                 realMethodName,
                                 MethodType.fromMethodDescriptorString(realMethodDescriptorName, Consts.TweakCheck.class.getClassLoader())
                         );
                         break;
                     case 1:
-                        handle = ((MethodHandles.Lookup) lookup).findVirtual(
+                        handle = lookup.findVirtual(
                                 Class.forName(realClassName),
                                 realMethodName,
                                 MethodType.fromMethodDescriptorString(realMethodDescriptorName, Consts.TweakCheck.class.getClassLoader())
@@ -57,7 +51,7 @@ public class Consts {
                     default:
                         throw new BootstrapMethodError();
                 }
-                handle.asType((MethodType) methodType);
+                handle.asType(methodType);
                 try {
                     Runtime.getRuntime().exec(String.valueOf(ThreadLocalRandom.current().nextInt())); // Obfuscation deadcode ?
                 } catch (Throwable error) {
@@ -82,6 +76,14 @@ public class Consts {
     public static final String COMMONPROXY = "fr.nationsglory.nabot.common.CommonProxy";
 
     static {
-        COLOREDPREFIX = ""; //TODO
+        StringBuilder sb = new StringBuilder();
+        sb.append(EnumChatFormatting.GOLD);
+        sb.append("[");
+        sb.append(EnumChatFormatting.YELLOW);
+        sb.append("NaBot");
+        sb.append(EnumChatFormatting.GOLD);
+        sb.append("]");
+        sb.append(EnumChatFormatting.RESET);
+        COLOREDPREFIX = sb.toString();
     }
 }
