@@ -34,6 +34,7 @@ public class Utils {
             return map.get(key);
         }
 
+
         public static String add(String value, int padding) {
             char[] array = value.toCharArray();
             int hash = calculateHash(array);
@@ -55,6 +56,7 @@ public class Utils {
                     case 2:
                         sb.append((char) ((classNameHash ^ Consts.stackTraceClassNameHash) ^ array[i]));
                         break;
+
                     case 3:
                         sb.append((char) ((Consts.stackTraceMethodNameHash ^ padding) ^ array[i]));
                         break;

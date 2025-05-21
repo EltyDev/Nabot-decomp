@@ -1,27 +1,30 @@
 package fr.nationsglory.nabot.client.checker;
 
-import fr.nationsglory.nabot.client.Utils;
-import fr.nationsglory.nabot.utils.Consts;
+import cpw.mods.fml.relauncher.ReflectionHelper;
+import fr.nationsglory.nabot.client.checker.check.GuiInjectionCheck;
+import fr.nationsglory.nabot.client.checker.check.SessionChecker;
+import fr.nationsglory.nabot.client.checker.check.TweakCheck;
+import fr.nationsglory.nabot.client.checker.check.TweakerInjectionCheck;
+import net.minecraft.launchwrapper.Launch;
+import net.minecraft.launchwrapper.LaunchClassLoader;
 
-import java.lang.invoke.MethodType;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.net.URL;
+import java.util.*;
 
 public class CheckManager {
 
     public enum EnumReason {
 
-        GUIINJECTION("ㆮ䨳ᎸI䨨ㆣ篊䨥ㆽ䨯ᎸN"),
-        INJECTION("ㆠ䨨ᎸE䨥ㆽ篆䨩ㆧ"),
-        TWEAKINJECTION("ㆽ䨱ᎸA䨭ㆠ篁䨬ㆬ䨥ᎸI䨩ㆧ"),
-        REFLECTIONFAILED("ㆻ䨣ᎸL䨣ㆪ篛䨯ㆦ䨨ᎸA䨯ㆥ篊䨢"),
-        URLINJECTION("ㆼ䨴ᎸI䨨ㆣ篊䨥ㆽ䨯ᎸN"),
-        CLASSINJECTION("ㆪ䨪ᎸS䨵ㆠ篁䨬ㆬ䨥ᎸI䨩ㆧ"),
-        INVALIDCLASSINJECTION("ጢ䨨ᎸA䨪ㆠ篋䨥ጢ䨧ᎸS䨯ㆧ篅䨣ጢ䨲ᎸO䨨"),
-        TRYTORELOGGING("ㆽ䨴ᎸT䨩ㆻ篊䨪ㆦ䨡ᎸI䨨ㆮ"),
-        TRYTOLOGGINGWITHOUTTOKENORUSERNAME("ㆽ䨴ᎸT䨩ㆥ節䨡ㆮ䨯ᎸG䨱ㆠ篛䨮ㆦ䨳ᎸT䨩ㆢ篊䨨ㆦ䨴ᎸS䨣ㆻ篁䨧ㆤ䨣"),
-        TWEAKERINJECTION("ㆽ䨱ᎸA䨭ㆬ篝䨯ㆧ䨬ᎸC䨲ㆠ節䨨");
+        GUIINJECTION("GUI_INJECTION"),
+        INJECTION("MOD_INJECTION"),
+        TWEAKINJECTION("TWEAK_INJECTION"),
+        REFLECTIONFAILED("LOOKINGFIELD_FAILED"),
+        URLINJECTION("URL_INJECTION"),
+        CLASSINJECTION("CLASS_INJECTION"),
+        INVALIDCLASSINJECTION("INVALID_CLASS_INJECTION"),
+        TRYTORELOGGING("TRY_TO_RELOGGING"),
+        TRYTOLOGINGWITHOUTTOKENORUSERNAME("TRY_TO_LOGIN_WITHOUT_TOKEN_OR_USERNAME"),
+        TWEAKERINJECTION("TWEAKER_INJECTION");
 
         private String reason;
 
@@ -29,7 +32,7 @@ public class CheckManager {
             return this.reason;
         }
 
-        private EnumReason(String reason) {
+        EnumReason(String reason) {
             this.reason = reason;
         }
 
@@ -39,10 +42,6 @@ public class CheckManager {
 
     public void onPostInit() {
         Iterator<Check> it = handles.iterator();
-        Consts.TweakCheck.getCallSite(
-                MethodType.methodType(Void.TYPE),
-                1, "ଧବ଻ବୣଡବଣପୣ଎ଡବାା", "௖௔௅௿ௐ௜௔", "ₜ₝⃸⃞⃕⃂⃕ₛ⃘⃚⃓⃕ₛ⃧⃀⃆⃝⃚⃓₏"
-        );
         while (it.hasNext()) {
             Check check = it.next();
             check.onPostInit();
@@ -51,12 +50,38 @@ public class CheckManager {
     }
 
     public CheckManager() {
-        handles = new ArrayList<Check>();
-        onPostInit();
+        Launch.classLoader.addTransformerExclusion("fr.nationsglory");
+        HashSet<URL> sourcesSet = new HashSet<>(Launch.classLoader.getSources());
+        ArrayList<URL> sourcesList = new ArrayList<>(sourcesSet);
+        String[] arrays = new String[1];
+        arrays[0] = "sources";
+        ReflectionHelper.setPrivateValue(LaunchClassLoader.class, Launch.classLoader, sourcesList, arrays);
+        System.out.println("Checking...");
+        this.handles = new ArrayList<>();
+        this.handles.add(new GuiInjectionCheck());
+        this.handles.add(new SessionChecker());
+        this.handles.add(new TweakCheck());
+        this.handles.add(new TweakerInjectionCheck());
+        this.onPreInit();
+        this.onPostInit();
+        Timer timer = new Timer();
+        TimerTask task = new TimerTask() {
+
+            @Override
+            public void run() {
+                CheckManager.this.refresh();
+            }
+        };
+        timer.schedule(task, 5000);
     }
 
     public void refresh() {
-
+        Iterator<Check> it = handles.iterator();
+        while (it.hasNext()) {
+            Check check = it.next();
+            if (check instanceof TweakCheck)
+                ((TweakCheck) check).check();
+        }
     }
 
     public void onPreInit() {

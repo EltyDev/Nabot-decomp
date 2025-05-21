@@ -30,7 +30,6 @@ public class Consts {
                 System.out.println("methodName = " +  realMethodName);
                 System.out.println("methodDescriptorName = " +  realMethodDescriptorName);
                 return null;
-
                 /*int realType = type & 255;
                 MethodHandle handle = null;
                 MethodHandles.Lookup lookup = MethodHandles.lookup();

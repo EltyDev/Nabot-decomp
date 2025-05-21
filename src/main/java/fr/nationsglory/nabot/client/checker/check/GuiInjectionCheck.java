@@ -1,11 +1,9 @@
-package fr.nationsglory.nabot.client.check;
+package fr.nationsglory.nabot.client.checker.check;
 
 import fr.nationsglory.nabot.client.checker.Check;
 import fr.nationsglory.nabot.client.checker.CheckManager;
-import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.EventBus;
 import net.minecraftforge.event.ForgeSubscribe;
 
 import java.net.URL;

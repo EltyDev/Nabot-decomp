@@ -3,16 +3,13 @@ package fr.nationsglory.nabot.client.checker;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import fr.nationsglory.nabot.client.Utils;
-import fr.nationsglory.nabot.utils.Consts;
 import net.minecraft.client.Minecraft;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.invoke.MethodType;
 import java.lang.reflect.Type;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
